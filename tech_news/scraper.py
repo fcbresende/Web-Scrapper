@@ -9,7 +9,7 @@ from .database import create_news
 def fetch(url):
     time.sleep(1)
     try:
-        response = requests.get(url)
+        response = requests.get(url, timeout=3)
         if response.status_code == 200:
             return response.text
         else:
@@ -21,7 +21,7 @@ def fetch(url):
 # Requisito 2
 def scrape_novidades(html_content):
     list = []
-    selector = Selector(text=html_content)
+    selector = Selector(html_content)
 
     for url in selector.css(
         ".tec--list__item .tec--card__title__link::attr(href)"
@@ -51,11 +51,11 @@ def scrape_noticia(html_content):
     ).get()
 
     title = selector.css(
-        "article.tec--article h1#js-article-title::text"
+        "h1#js-article-title::text"
     ).get()
 
     date = selector.css(
-        "article.tec--article time#js-article-date::attr(datetime)"
+        "#js-article-date::attr(datetime)"
     ).get()
 
     author = selector.css(
@@ -128,4 +128,5 @@ def get_tech_news(amount):
                 break
 
     create_news(news_array)
+
     return news_array

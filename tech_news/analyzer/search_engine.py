@@ -15,7 +15,7 @@ def search_by_date(date):
         datetime.strptime(date, "%Y-%m-%d")
     except ValueError:
         raise ValueError("Data inválida")
-    found_news = search_news({"timestamp": {"$regex": date}})
+    found_news = search_news({"timestamp": re.compile(date)})
     return [(item["title"], item["url"]) for item in found_news]
 
 
